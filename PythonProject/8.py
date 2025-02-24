@@ -6,7 +6,6 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-
 @pytest.fixture(scope="module")
 def driver():
     chrome_options = Options()
@@ -22,9 +21,7 @@ def driver():
     yield driver
     driver.quit()
 
-
 def test_countries_and_zones_alphabetical_order(driver):
-
     driver.get("http://localhost:8080/litecart/admin/?app=countries&doc=countries")
 
     WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "dataTable")))
@@ -35,8 +32,7 @@ def test_countries_and_zones_alphabetical_order(driver):
     country_elements = table.find_elements(By.XPATH, ".//td[5]/a")
     countries = [elem.text.strip() for elem in country_elements if elem.text.strip()]
     assert countries, "Список стран пуст!"
-    assert countries == sorted(
-        countries), f"Страны не в алфавитном порядке!\nОжидалось: {sorted(countries)}\nПолучено: {countries}"
+    assert countries == sorted(countries), f"Страны не в алфавитном порядке!\nОжидалось: {sorted(countries)}\nПолучено: {countries}"
 
     for i in range(len(rows)):
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "dataTable")))
@@ -59,18 +55,23 @@ def test_countries_and_zones_alphabetical_order(driver):
             continue
 
         country_link.click()
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//input[contains(@name, 'zones')]")))
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "dataTable")))
 
-        zone_inputs = driver.find_elements(By.XPATH, "//input[contains(@name, 'zones') and contains(@name, '[name]')]")
-        zones = [input_elem.get_attribute("value").strip() for input_elem in zone_inputs if
-                 input_elem.get_attribute("value").strip()]
+        # Извлекаем названия геозон из видимых ячеек таблицы, исключая строку добавления
+        zone_table = driver.find_element(By.CLASS_NAME, "dataTable")
+        zone_rows = zone_table.find_elements(By.TAG_NAME, "tr")[1:]  # Пропускаем заголовок
+        zones = []
+        for row in zone_rows:
+            cells = row.find_elements(By.TAG_NAME, "td")
+            if len(cells) >= 3 and cells[2].text.strip() and "Add" not in row.text:  # Фильтруем строку с кнопкой "Add"
+                zones.append(cells[2].text.strip())
 
         if zones != sorted(zones):
-                print(
-                    f"Для страны '{country_name}' геозоны не в алфавитном порядке!\nОжидалось: {sorted(zones)}\nПолучено: {zones}")
+            print(f"Для страны '{country_name}' геозоны не в алфавитном порядке!\nОжидалось: {sorted(zones)}\nПолучено: {zones}")
+        else:
+            print(f"Для страны '{country_name}' геозоны в алфавитном порядке: {zones}")
 
         driver.get("http://localhost:8080/litecart/admin/?app=countries&doc=countries")
-
 
 if __name__ == "__main__":
     pytest.main(["-v"])
