@@ -1,186 +1,76 @@
-import time
+import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
-chrome_options = Options()
-chrome_options.add_argument("--start-maximized")
 
-CHROMEDRIVER_PATH = "C:\\driver\\chromedriver.exe"
-service = ChromeService(executable_path=CHROMEDRIVER_PATH)
-
-driver = webdriver.Chrome(service=service, options=chrome_options)
-
-try:
+@pytest.fixture(scope="module")
+def driver():
+    options = Options()
+    service = ChromeService(executable_path=r"C:\driver\chromedriver.exe")
+    driver = webdriver.Chrome(service=service, options=options)
     driver.get("http://localhost:8080/litecart/admin/")
-
-    driver.find_element(By.NAME, "username").send_keys("admin")
-    driver.find_element(By.NAME, "password").send_keys("admin")
-    driver.find_element(By.NAME, "login").click()
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Appearence']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Template']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Logotype']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Catalog']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Product Groups']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Option Groups']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Manufacturers']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Suppliers']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Delivery Statuses']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Sold Out Statuses']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Quantity Units']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='CSV Import/Export']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Countries']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Customers']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='CSV Import/Export']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Newsletter']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Geo Zones']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Languages']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Storage Encoding']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Modules']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Background Jobs']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Customer']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Shipping']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Payment']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Order Total']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Order Success']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Order Action']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Orders']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Order Statuses']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Pages']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Reports']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Monthly Sales']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Most Sold Products']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Settings']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Store Info']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Defaults']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='General']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Listings']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Images']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Checkout']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Advanced']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Security']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Slides']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Tax']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Tax Classes']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Tax Rates']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Translations']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Search Translations']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Scan Files']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='CSV Import/Export']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='Users']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='vQmods']/..").click()
-    time.sleep(0.25)
-
-    driver.find_element(By.XPATH, "//span[@class='name' and text()='vQmods']/..").click()
-    time.sleep(0.25)
-
-
-except Exception as e:
-    print(f"Ошибка: {e}")
-
-finally:
+    username = driver.find_element(By.NAME, "username")
+    username.send_keys("admin")
+    password = driver.find_element(By.NAME, "password")
+    password.send_keys("admin")
+    login_button = driver.find_element(By.NAME, "login")
+    login_button.click()
+    yield driver
     driver.quit()
+
+
+def test_admin_menu_headers(driver):
+    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "box-apps-menu")))
+
+    menu = driver.find_element(By.ID, "box-apps-menu")
+    top_level_items = menu.find_elements(By.XPATH, "//li[starts-with(@id, 'app-')]")
+
+    for i in range(len(top_level_items)):
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "box-apps-menu")))
+        menu = driver.find_element(By.ID, "box-apps-menu")
+        top_level_items = menu.find_elements(By.XPATH, "//li[starts-with(@id, 'app-')]")
+
+        top_item = top_level_items[i]
+        top_link = top_item.find_element(By.XPATH, "./a")
+        top_link_text = top_link.find_element(By.CLASS_NAME, "name").text.strip()
+        print(f"Переход по верхнему пункту меню: '{top_link_text}'")
+
+        top_link.click()
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "box-apps-menu")))
+
+        try:
+            header = driver.find_element(By.TAG_NAME, "h1")
+            print(f"Заголовок на странице: '{header.text.strip()}'")
+        except:
+            print(f"Ошибка: На странице верхнего пункта '{top_link_text}' отсутствует заголовок <h1>!")
+
+        try:
+            WebDriverWait(driver, 1).until(EC.presence_of_element_located((By.CLASS_NAME, "docs")))
+            sub_items = driver.find_elements(By.XPATH, "//ul[@class='docs']//a")
+        except:
+            print(f"У пункта '{top_link_text}' нет вложенных элементов.")
+            continue  # Переходим к следующему верхнему пункту
+
+        for sub_index in range(len(sub_items)):
+            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "docs")))
+            sub_items = driver.find_elements(By.XPATH, "//ul[@class='docs']//a")
+            sub_link = sub_items[sub_index]
+            sub_link_text = sub_link.text.strip()
+            print(f"Переход по вложенному пункту меню: '{sub_link_text}'")
+
+            sub_link.click()
+            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "box-apps-menu")))
+
+            try:
+                header = driver.find_element(By.TAG_NAME, "h1")
+                print(f"Заголовок на странице: '{header.text.strip()}'")
+            except:
+                print(f"Ошибка: На странице вложенного пункта '{sub_link_text}' отсутствует заголовок <h1>!")
+
+
+if __name__ == "__main__":
+    pytest.main(["-v"])
