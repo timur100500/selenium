@@ -26,9 +26,10 @@ def test_geo_zones_alphabetical_order(driver):
     WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "dataTable")))
 
     table = driver.find_element(By.CLASS_NAME, "dataTable")
-    rows = table.find_elements(By.TAG_NAME, "tr")[1:]
+    rows = table.find_elements(By.TAG_NAME, "tr")[1:]  # Пропускаем заголовок
 
-    country_elements = table.find_elements(By.XPATH, ".//td[3]/a")
+    # Пункт а: Проверка алфавитного порядка стран
+    country_elements = table.find_elements(By.XPATH, ".//td[3]/a")  # Названия стран в 3-й колонке
     countries = [elem.text.strip() for elem in country_elements if elem.text.strip()]
     assert countries, "Список стран пуст!"
     assert countries == sorted(countries), f"Страны не в алфавитном порядке!\nОжидалось: {sorted(countries)}\nПолучено: {countries}"
@@ -45,30 +46,29 @@ def test_geo_zones_alphabetical_order(driver):
             continue
 
         try:
-            country_link = cells[2].find_element(By.TAG_NAME, "a")
+            country_link = cells[2].find_element(By.TAG_NAME, "a")  # Ссылка в колонке Geo Zone (3-я колонка)
             country_name = country_link.text.strip()
         except Exception as e:
             print(f"Ошибка в строке {i + 1}: не удалось найти ссылку на страну. Причина: {str(e)}")
             continue
 
-        zones_count = cells[3].text.strip()
+        zones_count = cells[3].text.strip()  # Количество зон в 4-й колонке
         if not zones_count.isdigit() or int(zones_count) == 0:
             print(f"У страны '{country_name}' нет зон для проверки ({zones_count})")
             continue
 
         print(f"Открываем страницу страны: '{country_name}'")
         country_link.click()
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "dataTable")))
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.TAG_NAME, "select")))
 
-        zone_table = driver.find_element(By.CLASS_NAME, "dataTable")
-        zone_rows = zone_table.find_elements(By.TAG_NAME, "tr")[1:]
+        # Извлекаем выбранные значения только из <select> с геозонами
+        select_elements = driver.find_elements(By.XPATH, "//select[contains(@name, 'zones') and contains(@name, '[zone_code]')]")
         zones = []
-        for zone_row in zone_rows:
-            zone_cells = zone_row.find_elements(By.TAG_NAME, "td")
-            if len(zone_cells) >= 3:
-                zone_name = zone_cells[2].text.strip()
-                if zone_name:
-                    zones.append(zone_name)
+        for select in select_elements:
+            selected_option = select.find_element(By.XPATH, ".//option[@selected='selected']")
+            zone_name = selected_option.text.strip()
+            if zone_name and zone_name != "-- All Zones --":  # Исключаем пустую опцию
+                zones.append(zone_name)
 
         if zones:
             print(f"Zones for {country_name}: {zones}")
@@ -78,7 +78,7 @@ def test_geo_zones_alphabetical_order(driver):
             else:
                 print(f"Для страны '{country_name}' геозоны в алфавитном порядке.")
         else:
-            print(f"Для страны '{country_name}' не найдено видимых геозон.")
+            print(f"Для страны '{country_name}' не найдено выбранных геозон.")
 
         driver.get("http://localhost:8080/litecart/admin/?app=geo_zones&doc=geo_zones")
 
