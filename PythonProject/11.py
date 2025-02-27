@@ -1,19 +1,19 @@
 import time
 import uuid
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.firefox.service import Service as FirefoxService
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import Select, WebDriverWait
+from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
 
-chrome_options = Options()
-chrome_options.add_argument("--start-maximized")
+firefox_options = FirefoxOptions()
+firefox_options.add_argument("--start-maximized")
 
-CHROMEDRIVER_PATH = "C:\\driver\\chromedriver.exe"
-service = ChromeService(executable_path=CHROMEDRIVER_PATH)
+FIREFOXDRIVER_PATH = "C:\\driver\\geckodriver.exe"
 
-driver = webdriver.Chrome(service=service, options=chrome_options)
+service = FirefoxService(executable_path=FIREFOXDRIVER_PATH)
+driver = webdriver.Firefox(service=service, options=firefox_options)
 wait = WebDriverWait(driver, 10)
 
 try:
@@ -25,11 +25,15 @@ try:
     driver.find_element(By.NAME, "firstname").send_keys("John")
     driver.find_element(By.NAME, "lastname").send_keys("Doe")
     driver.find_element(By.NAME, "address1").send_keys("123 Main St")
-    driver.find_element(By.NAME, "postcode").send_keys("12345")  # Формат: пять цифр
+    driver.find_element(By.NAME, "postcode").send_keys("12345")
     driver.find_element(By.NAME, "city").send_keys("Anytown")
 
-    country_select_element = driver.find_element(By.NAME, "country_code")
-    Select(country_select_element).select_by_value("US")
+    country_dropdown = driver.find_element(By.CLASS_NAME, "select2-selection")
+    country_dropdown.click()
+
+    wait.until(EC.presence_of_element_located((By.CLASS_NAME, "select2-results")))
+    country_option = driver.find_element(By.XPATH, "//li[contains(@class, 'select2-results__option') and text()='United States']")
+    country_option.click()
 
     driver.find_element(By.NAME, "email").send_keys(unique_email)
     driver.find_element(By.NAME, "phone").send_keys("+11234567890")
