@@ -1,5 +1,6 @@
 import os
 import time
+import uuid
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service as ChromeService
@@ -33,9 +34,9 @@ try:
     enabled_radio = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "input[name='status'][value='1']")))
     enabled_radio.click()
 
+    unique_product_name = f"Test Product {uuid.uuid4().hex[:8]}"
     name_input = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "input[name='name[en]']")))
-    product_name = "Test Product"
-    name_input.send_keys(product_name)
+    name_input.send_keys(unique_product_name)
 
     code_input = driver.find_element(By.CSS_SELECTOR, "input[name='code']")
     code_input.send_keys("TP-001")
@@ -95,11 +96,11 @@ try:
     wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "table.dataTable")))
     time.sleep(1)
 
-    product_elements = driver.find_elements(By.XPATH, f"//tr[@class='row']//a[contains(text(), '{product_name}')]")
+    product_elements = driver.find_elements(By.XPATH, f"//tr[@class='row']//a[contains(text(), '{unique_product_name}')]")
     if product_elements:
-        print("Новый товар успешно добавлен в каталог.")
+        print(f"Новый товар '{unique_product_name}' успешно добавлен в каталог.")
     else:
-        print("Товар не найден в каталоге.")
+        print(f"Товар '{unique_product_name}' не найден в каталоге.")
 
 finally:
     time.sleep(3)
